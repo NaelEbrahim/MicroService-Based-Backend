@@ -1,0 +1,57 @@
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+server:
+  port: 8060
+
+spring:
+  application:
+    name: course-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/coursedb?createDatabaseIfNotExist=true
+    username: root
+    password: 052427216093
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+
+application:
+  config:
+    user-service-url: localhost:8050
+    enrollment-service-url: localhost:8070
+
+feign:
+  circuitbreaker:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 2000  # 2 seconds
+        readTimeout: 5000    # 5 seconds
+        loggerLevel: basic
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      userClient:
+        registerHealthIndicator: true
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+
+jwt:
+  accessTokenExpiration: 86400000
+  refreshTokenExpiration: 259200000
+  secret: d4XxeUg1xwh9UKQRUt51K8rz68M+UK1FCsKvMbHUmQ9dHCARrU99l0iqravNcEsN
